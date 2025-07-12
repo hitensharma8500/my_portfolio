@@ -1,13 +1,14 @@
 {
-  "name": "vite-react-typescript-starter",
+  "name": "hiten-sharma-portfolio",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "deploy": "npm run build"
   },
   "dependencies": {
     "lucide-react": "^0.344.0",

@@ -50,12 +50,13 @@ const Sidebar = () => {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="fixed top-6 right-6 z-50 lg:hidden p-3 glassmorphism rounded-lg hover-glow"
+        aria-label={isOpen ? "Close menu" : "Open menu"}
       >
         {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
       </button>
 
       {/* Sidebar */}
-      <nav className={`fixed top-0 right-0 h-full w-80 glassmorphism backdrop-blur-xl z-40 transform transition-transform duration-300 ${
+      <nav className={`fixed top-0 right-0 h-full w-80 glassmorphism backdrop-blur-xl z-40 transform transition-transform duration-300 group ${
         isOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'
       } lg:w-20 lg:hover:w-80 lg:transition-all lg:duration-300`}>
         <div className="p-6 h-full flex flex-col">
@@ -75,6 +76,7 @@ const Sidebar = () => {
                       ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
                       : 'hover:bg-gray-700 text-gray-300 hover:text-white'
                   }`}
+                  aria-label={`Navigate to ${item.label} section`}
                 >
                   {item.icon}
                   <span className="lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300">
@@ -97,6 +99,7 @@ const Sidebar = () => {
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
           onClick={() => setIsOpen(false)}
+          aria-hidden="true"
         />
       )}
     </>

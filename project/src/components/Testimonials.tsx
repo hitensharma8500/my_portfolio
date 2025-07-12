@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Quote, Star } from 'lucide-react';
 
 const Testimonials = () => {
+  const [imageErrors, setImageErrors] = useState<{ [key: number]: boolean }>({});
+
   const testimonials = [
     {
       name: "Dr. Rajesh Kumar",
@@ -26,6 +28,10 @@ const Testimonials = () => {
     }
   ];
 
+  const handleImageError = (index: number) => {
+    setImageErrors(prev => ({ ...prev, [index]: true }));
+  };
+
   return (
     <section id="testimonials" className="py-20 px-8 lg:px-20 bg-gray-800">
       <div className="max-w-6xl mx-auto">
@@ -40,25 +46,35 @@ const Testimonials = () => {
               className="glassmorphism p-8 rounded-xl hover-glow transition-all duration-300 fade-in-up"
               style={{ animationDelay: `${index * 0.2}s` }}
             >
-              <div className="flex items-center gap-1 mb-4">
+              <div className="flex items-center gap-1 mb-4" role="img" aria-label={`${testimonial.rating} out of 5 stars`}>
                 {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                  <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" aria-hidden="true" />
                 ))}
               </div>
               
               <div className="relative mb-6">
-                <Quote className="w-8 h-8 text-blue-400 mb-4 opacity-50" />
-                <p className="text-gray-300 leading-relaxed italic">
+                <Quote className="w-8 h-8 text-blue-400 mb-4 opacity-50" aria-hidden="true" />
+                <blockquote className="text-gray-300 leading-relaxed italic">
                   "{testimonial.content}"
-                </p>
+                </blockquote>
               </div>
               
               <div className="flex items-center gap-4">
-                <img 
-                  src={testimonial.image} 
-                  alt={testimonial.name}
-                  className="w-12 h-12 rounded-full object-cover border-2 border-blue-500"
-                />
+                {imageErrors[index] ? (
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center border-2 border-blue-500">
+                    <span className="text-white text-sm font-semibold">
+                      {testimonial.name.split(' ').map(n => n[0]).join('')}
+                    </span>
+                  </div>
+                ) : (
+                  <img 
+                    src={testimonial.image} 
+                    alt={`${testimonial.name}, ${testimonial.position}`}
+                    className="w-12 h-12 rounded-full object-cover border-2 border-blue-500"
+                    onError={() => handleImageError(index)}
+                    loading="lazy"
+                  />
+                )}
                 <div>
                   <h4 className="font-semibold">{testimonial.name}</h4>
                   <p className="text-sm text-gray-400">{testimonial.position}</p>

@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Calendar, Clock, ExternalLink } from 'lucide-react';
 
 const Blog = () => {
+  const [imageErrors, setImageErrors] = useState<{ [key: number]: boolean }>({});
+
   const blogPosts = [
     {
       title: "The Future of Machine Learning in Automation",
@@ -29,6 +31,10 @@ const Blog = () => {
     }
   ];
 
+  const handleImageError = (index: number) => {
+    setImageErrors(prev => ({ ...prev, [index]: true }));
+  };
+
   return (
     <section id="blog" className="py-20 px-8 lg:px-20 bg-gray-800">
       <div className="max-w-6xl mx-auto">
@@ -44,11 +50,19 @@ const Blog = () => {
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className="relative overflow-hidden">
-                <img 
-                  src={post.image} 
-                  alt={post.title}
-                  className="w-full h-48 object-cover transition-transform duration-300 hover:scale-110"
-                />
+                {imageErrors[index] ? (
+                  <div className="w-full h-48 bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center">
+                    <span className="text-white text-lg font-semibold">Blog Post</span>
+                  </div>
+                ) : (
+                  <img 
+                    src={post.image} 
+                    alt={post.title}
+                    className="w-full h-48 object-cover transition-transform duration-300 hover:scale-110"
+                    onError={() => handleImageError(index)}
+                    loading="lazy"
+                  />
+                )}
                 <div className="absolute top-4 left-4">
                   <span className="px-3 py-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full text-xs font-medium">
                     {post.category}
@@ -67,18 +81,23 @@ const Blog = () => {
                 
                 <div className="flex items-center justify-between text-sm text-gray-400 mb-4">
                   <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4" />
-                    {new Date(post.date).toLocaleDateString()}
+                    <Calendar className="w-4 h-4" aria-hidden="true" />
+                    <time dateTime={post.date}>
+                      {new Date(post.date).toLocaleDateString()}
+                    </time>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4" />
-                    {post.readTime}
+                    <Clock className="w-4 h-4" aria-hidden="true" />
+                    <span>{post.readTime}</span>
                   </div>
                 </div>
                 
-                <button className="flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors duration-300">
+                <button 
+                  className="flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors duration-300"
+                  aria-label={`Read more about ${post.title}`}
+                >
                   Read More
-                  <ExternalLink className="w-4 h-4" />
+                  <ExternalLink className="w-4 h-4" aria-hidden="true" />
                 </button>
               </div>
             </article>
